@@ -1,0 +1,49 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  <title>Login ANACAFÉ</title>
+</head>
+<body>
+    <div class="nose">
+        <img src="{% static 'img/login/img1.png' %}" id="fondofondo">
+    </div> 
+    
+  <div class="fondo-central">
+    <div class="contenedor">
+      <!-- Panel izquierdo con imagen de fondo -->
+      <div class="izquierda">
+        <div class="logo-ana">
+          <img src="{% static 'img/LogoANACAF 1.png' %}" alt="Logo ANACAFÉ">
+          <h1>ANACAFÉ</h1>
+          <h2>GUATEMALA</h2>
+        </div>
+      </div>
+
+      <!-- Panel derecho -->
+      <div class="derecha">
+        <div class="logo-sigapc">
+          <img src="{% static 'img/login/img3.png' %}" alt="Logo SIGAPC">
+        </div>
+        <h1>SIGAPC-ANACAFÉ</h1>
+        <h3>Sistema Integral de Gestión para el</h3>
+        <h3>Procesamiento de Café</h3>
+
+        <form>
+          <label for="usuario">Usuario</label>
+          <input type="text" id="usuario"/>
+
+          <label for="contrasena">Contraseña</label>
+          <input type="password" id="contrasena"  />
+
+          <button type="submit">Iniciar Sesión</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

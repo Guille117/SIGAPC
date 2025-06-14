@@ -1,0 +1,430 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+.fondo{
+  position: relative;
+  height: 100%;
+}
+
+.fondo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 10%; 
+  width: 100%;
+  background: linear-gradient(to bottom, transparent, white);
+  pointer-events: none;
+}
+
+.fondo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.barra-superior {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  color: white;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-left: 3px;
+}
+
+.logo img {
+  height: 100px;
+  margin-right: -10%;
+}
+
+.logo h1{
+    font-size:35px;
+    font-weight:900
+}
+
+nav{
+    padding-left: 20%;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  background-color: white;
+  border-radius: 15px;
+  height: 35px;
+  gap: 6px;
+  align-items: center;
+}
+
+nav li a {
+  display: inline-block;
+  padding: 9.5px 11px;
+  height: 100%;
+  background-color: white;
+  color: #003300;
+  font-weight: bold;
+  border-radius: 13px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1;
+  min-width: 120px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+nav li a:hover {
+  background-color: #003300;
+  color: white;
+}
+
+.textEnca{
+    position: absolute;
+    margin-top: 20%;
+    margin-left: 4%;
+    padding: 10px;
+}
+
+.textEnca h1{
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: -0.100px;
+}
+
+/*  --------- sobre cafe   --------------*/
+
+.sobreCafe{
+    display: flex;
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 60px;
+}
+
+#logo{
+    display: flex;
+    height: 25%;
+    margin-left: -25px;
+}
+
+.textLog{
+    color: #030;
+    font-family: sans-serif;
+    margin-left: -35px;
+}
+
+.textLog h1{
+    font-weight: 900;
+}
+
+.textLog h2{
+    font-weight: 600;
+    margin-left: 13px;
+}
+
+.izquierda{
+    width: 45%;
+    margin-right: 5%;
+}
+
+.derecha{
+    width: 50%;
+}
+
+.derecha img{
+    width: 100%;
+}
+
+.izquierda #h1{
+    margin-top: 13px;
+    color: #714934;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+}
+
+.izquierda p{
+   margin-bottom: 10px; 
+   font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.izquierda li{
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.derecha img{
+    height: 90%;
+    width: 110%;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/*  ----------- misión  y visión  ------------------*/
+.mivi{
+    margin-top: 30px;
+    position: relative;
+    width: 100%;
+    height: 250px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.mivi img{
+    width: 100%;
+    height: 100%;
+    filter: blur(4px) brightness(1.2);
+    opacity: 0.3;
+}
+
+.miv{
+    padding-top: 10px;
+    position: absolute;
+    display: flex;
+    top: 0;
+    left: 0;
+    margin-left: 20%;
+    align-items: center;
+    text-align: center;
+}
+
+.miv h2{
+    color: #030;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.miv p{
+    font-size: 16px;
+}
+
+.mision{
+    width:35%;
+    margin-right: 15%;
+}
+
+.vision{
+    width:35%;
+}
+
+/*  --------  valores  ----------------*/
+
+.valores{
+    width: 90%;
+    margin-top: 40px;
+    margin-left: 10%;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.niv1{
+    display:flex;
+    margin-top: 20px;
+    margin-bottom: 90px;
+}
+
+.niv2{
+    display:flex
+}
+
+.card{
+    width: 30%;
+    margin-right: 10%;
+}
+
+.valores h1{
+    font-weight: 900;
+    margin-left: -10%;
+    font-size: 25px;
+}
+
+.valores h3{
+    font-size: 16px;
+    margin-top: 25px;
+}
+
+.valores p{
+    font-size: 14px;
+}
+
+/*-----------------------------*/
+
+.estructura{
+    width: 100%;
+    height: 320px;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-size: 12px;
+    margin-top: 40px;
+}
+
+.estructura img{
+    width: 75%;
+    height: auto;
+
+}
+
+.estructura h1{
+    margin-bottom: 30px;    
+}
+
+/*-----------------------------------------------*/
+
+/*  -------  contactos  -----------*/
+.contactos {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #003300;
+  color: white;
+  padding: 30px 40px;
+  font-family: Arial, sans-serif;
+  gap: 20px;
+  margin-top: 100px;
+}
+
+
+/* LOGO */
+.contacLogo {
+  width: 22%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+    margin-left: -23px;
+    margin-right: 140px;
+}
+
+.contacLogo img {
+  width: 200px;
+  margin-right: -43px;
+}
+
+.contacLogo h1 {
+  font-size: 26px;
+  margin: 0;
+  font-weight: 900;
+}
+
+.contacLogo h2 {
+  font-size: 20px;
+  margin-left: 10px;
+  font-weight: 100;
+}
+
+/* INFORMACIÓN */
+.info {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-left: -23px;
+}
+
+.info > div {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.info svg {
+  width: 24px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.info h1 {
+  font-size: 14px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.info h2 {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* REDES SOCIALES */
+.redesSoc {
+  width: 18%;
+}
+
+.redesSoc h1 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.redesSoc div {
+  display: flex;
+  gap: 10px;
+}
+
+.redesSoc svg {
+  width: 24px;
+  height: 24px;
+  fill: #8EBA7E;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.redesSoc svg:hover {
+  transform: scale(1.1);
+}
+
+/* MAPA */
+.mapa {
+  width: 18%;
+}
+
+.mapa h1 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.mapa img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/*  --------------- footer  -----------*/
+footer{
+    background-color: #8EBA7E;
+    text-align: center;
+}
+
+footer h1{
+    color:black;
+    font-size: 20px;
+    font-weight: 100;
+}

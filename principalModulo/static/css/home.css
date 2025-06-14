@@ -1,0 +1,230 @@
+
+
+/* Estilos generales */
+article{
+    padding-top: 60px;
+}
+
+article .textoGeneral {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 0 15px;
+}
+
+article .textoGeneral h1 {
+    color: #030;
+    font-family: Roboto, sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    margin-left: 70px;
+}
+
+article .textoGeneral p {
+    color: #000;
+    font-family: Roboto, sans-serif;
+    font-size: clamp(16px, 3vw, 20px);
+    font-weight: 400;
+    line-height: 1.4;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-left: 70px;
+}
+
+/* Contenedor de módulos */
+article section:last-child {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 0 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Estilos para cada módulo */
+.modulo {
+    border-radius: 12px;
+    background: rgba(200, 200, 200, 0.33);
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    aspect-ratio: 1/1;
+    min-height: 200px;
+    width: 220px;
+    height: 220px;
+    margin-left: 10%;
+}
+
+#modulos{
+    display: block;
+    margin-left: -5%;
+}
+
+.filaSup{
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.filaInf{
+    display: flex;
+}
+
+article .modulo:hover {
+    transform: translateY(-5px);
+    box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+article .modulo svg, 
+article .modulo img {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 15px;
+    object-fit: contain;
+}
+
+article .modulo .texto {
+    text-align: center;
+}
+
+article .modulo .texto h3 {
+    color: #030;
+    font-family: Inter, sans-serif;
+    font-size: clamp(14px, 2vw, 16px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+}
+
+article .modulo .texto span {
+    color: #7D5642;
+    font-family: Inter, sans-serif;
+    font-size: clamp(12px, 1.8vw, 14px);
+    font-weight: 500;
+    line-height: 1.3;
+    display: block;
+}
+
+/*---------------------------------------------------------*/
+.principal{
+    display: flex;
+    margin-bottom: 30px;
+}
+nav{
+    padding-top: 60px;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.1);
+    margin-left: 25px;
+    padding-right: 30px;
+}
+.op{
+    display: flex;
+    margin-bottom: 8px;
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.op:hover{
+    transform: scale(1.05);
+    background-color:#030;
+    color: aliceblue;
+
+}
+.op::after{
+    transform: scale(1.05);
+    background-color:#030;
+    color: aliceblue;
+}
+.op:hover svg path {
+  fill: white;
+}
+
+.op::after svg path{
+    fill: white;
+}
+
+.op h3{
+    margin-left: 10px;
+}
+
+.menu{
+    cursor: pointer;;
+}
+
+#menuNav {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+/* Al activarse, el menú se despliega suavemente */
+#menuNav.activo {
+  max-height: 900px; /* ajusta según el contenido real */
+}
+
+
+
+/* Media Queries para ajustes específicos */
+@media (max-width: 768px) {
+    article section:last-child {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    article section:last-child {
+        grid-template-columns: 1fr;
+    }
+    
+    article .modulo {
+        max-width: 250px;
+        margin: 0 auto;
+    }
+}
+/* Media Queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 10px;
+        gap: 15px;
+    }
+    
+    .MenuTitle, .sesion {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .texto {
+        margin-left: 10px;
+        text-align: center;
+    }
+    
+    .MenuTitle {
+        order: 2;
+    }
+    
+    .sesion {
+        order: 1;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .MenuTitle {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .texto {
+        margin-left: 0;
+    }
+    
+    header .title {
+        white-space: normal;
+        text-align: center;
+    }
+}
