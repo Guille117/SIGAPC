@@ -285,22 +285,31 @@ header .usuarioimg {
 }
 
 /* Estilos de botones */
-.btn {
-  border: none;
-  padding: 6px 8px;
-  margin: 0 2px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  color: white;
-}
+
 
 .btn.verde {
-  background-color: #014421;
+  background-color:#014421;
 }
 
 .btn.rojo {
   background-color: #c00000;
+}
+
+td button.btn { 
+  padding: 6px 8px;
+  color: white;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  margin: 2px;
+  
+  vertical-align: middle;
 }
 
 /*---------------------------------------------------------------*/

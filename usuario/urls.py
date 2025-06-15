@@ -14,4 +14,6 @@ urlpatterns=[
     path('methContra/', views.cambiarContra),
     path('methRoles/', views.listarRoles),
     path('methInactivos/', views.usuariosInactivos),
-]
+    path('methbuscarUsu/', views.buscarUsuario),
+    path('methEmpleados/', views.listarEmpleados),
+    ]

@@ -3,41 +3,39 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import make_password
-from usuario.models import Usuario, UsuarioRol, Rol
+from django.contrib.auth.hashers import make_password, check_password
+from usuario.models import Usuario, Rol
 from empleado.models import Empleado
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.hashers import check_password, make_password
+from django.db.models import F, Value
+from django.db.models.functions import Concat
+from usuario.utilidades import rol_requerido
+
 
 def usu(request):
     return render(request, 'Usuario1.html')
 
-from django.contrib.auth.models import User
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@rol_requerido("Administrador")
 def crearUsuario(request):
     try:
         data = json.loads(request.body)
         empleado = Empleado.objects.get(idEmpleado=data["idEmpleado"])
 
-        if User.objects.filter(username=data["nikname"]).exists():
+        if Usuario.objects.filter(nikname=data["nikname"]).exists():
             return JsonResponse({"error": "El nombre de usuario ya existe"}, status=400)
 
-        user = User.objects.create_user(
-            username=data["nikname"],
-            password=data["contrasenia"]
-        )
+        rol = Rol.objects.get(id=data["idRol"])
 
-        # Relaciona tu modelo Usuario si lo usás adicionalmente
         usuario = Usuario.objects.create(
             empleado=empleado,
-            nikname=user.username,
-            contrasenia=user.password  # o simplemente user
+            nikname=data["nikname"],
+            contrasenia=make_password(data["contrasenia"]),
+            activo=True
         )
-
-        rol = Rol.objects.get(id=data["idRol"])
-        UsuarioRol.objects.create(usuario=usuario, rol=rol)
+        usuario.rol = rol
+        usuario.save()
 
         return JsonResponse({"mensaje": "Usuario creado correctamente", "idUsuario": usuario.id}, status=201)
 
@@ -52,17 +50,16 @@ def crearUsuario(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def listarUsuarios(request):
-    usuarios = Usuario.objects.select_related("empleado").all()
+    usuarios = Usuario.objects.select_related("empleado", "rol").all()
     datos = []
     for u in usuarios:
-        rol = UsuarioRol.objects.filter(usuario=u, activo=True).first()
         datos.append({
             "idUsuario": u.id,
             "nikname": u.nikname,
             "empleado": f"{u.empleado.persona.primerNombre} {u.empleado.persona.primerApellido}",
             "activo": u.activo,
-            "mail":u.empleado.persona.correo,
-            "rol": rol.rol.nombre_rol if rol else "Sin rol"
+            "mail": u.empleado.persona.correo,
+            "rol": u.rol.nombre_rol if u.rol else "Sin rol"
         })
     return JsonResponse({"usuarios": datos}, status=200)
 
@@ -71,8 +68,7 @@ def listarUsuarios(request):
 @require_http_methods(["GET"])
 def obtenerUsuario(request, id):
     try:
-        usuario = Usuario.objects.select_related("empleado").get(id=id)
-        rol = UsuarioRol.objects.filter(usuario=usuario, activo=True).first()
+        usuario = Usuario.objects.select_related("empleado", "rol").get(id=id)
         data = {
             "idUsuario": usuario.id,
             "nikname": usuario.nikname,
@@ -81,11 +77,12 @@ def obtenerUsuario(request, id):
                 "idEmpleado": usuario.empleado.idEmpleado,
                 "nombreCompleto": f"{usuario.empleado.persona.primerNombre} {usuario.empleado.persona.primerApellido}"
             },
-            "rol": rol.rol.nombre_rol if rol else "Sin rol"
+            "rol": usuario.rol.nombre_rol if usuario.rol else "Sin rol"
         }
         return JsonResponse(data, status=200)
     except Usuario.DoesNotExist:
         return JsonResponse({"error": "Usuario no encontrado"}, status=404)
+
 
 @csrf_exempt
 @require_http_methods(["DELETE"])
@@ -109,21 +106,17 @@ def usuariosRol(request):
         if not idRol:
             return JsonResponse({"error": "Debe proporcionar el idRol"}, status=400)
 
-        rol = Rol.objects.get(id=idRol)
-
-        # Filtrar relaciones activas de ese rol
-        relaciones = UsuarioRol.objects.filter(rol=rol, activo=True).select_related("usuario__empleado__persona", "rol")
+        usuarios = Usuario.objects.filter(rol_id=idRol, activo=True).select_related("empleado", "rol")
 
         datos = []
-        for rel in relaciones:
-            usuario = rel.usuario
+        for u in usuarios:
             datos.append({
-                "idUsuario": usuario.id,
-                "nikname": usuario.nikname,
-                "empleado": f"{usuario.empleado.persona.primerNombre} {usuario.empleado.persona.primerApellido}",
-                "activo": usuario.activo,
-                "mail": usuario.empleado.persona.correo,
-                "rol": rel.rol.nombre_rol
+                "idUsuario": u.id,
+                "nikname": u.nikname,
+                "empleado": f"{u.empleado.persona.primerNombre} {u.empleado.persona.primerApellido}",
+                "activo": u.activo,
+                "mail": u.empleado.persona.correo,
+                "rol": u.rol.nombre_rol if u.rol else "Sin rol"
             })
 
         return JsonResponse({"usuarios": datos}, status=200)
@@ -142,11 +135,13 @@ def loginUsuario(request):
         username = data.get('username')
         password = data.get('password')
 
-        # Buscar directamente en tu modelo personalizado
         usuario = Usuario.objects.get(nikname=username)
 
+        if not usuario.activo:
+            return JsonResponse({"success": False, "error": "Usuario inhabilitado"}, status=403)
+
         if check_password(password, usuario.contrasenia):
-            # Aquí puedes guardar en sesión si deseas
+            request.session['usuario_id'] = usuario.id 
             return JsonResponse({"success": True, "message": "Login exitoso"})
         else:
             return JsonResponse({"success": False, "error": "Contraseña incorrecta"}, status=401)
@@ -155,9 +150,9 @@ def loginUsuario(request):
         return JsonResponse({"success": False, "error": "Usuario no encontrado"}, status=404)
 
 
-
 @csrf_exempt  
 @require_http_methods(["POST"])
+@rol_requerido("Administrador", "RRHH")
 def cambiarEstado(request):
     try:
         data = json.loads(request.body)
@@ -171,7 +166,7 @@ def cambiarEstado(request):
         if usuario is None:
             return JsonResponse({"success": False, "error": "Usuario no encontrado"}, status=404)
 
-        usuario.activo = not usuario.activo  # invierte el estado
+        usuario.activo = not usuario.activo
         usuario.save()
 
         return JsonResponse({
@@ -183,15 +178,14 @@ def cambiarEstado(request):
     except json.JSONDecodeError:
         return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
 
-from django.contrib.auth.hashers import check_password, make_password
-from .models import Usuario  # Asegúrate de importar tu modelo correcto
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@rol_requerido("Administrador")
 def cambiarContra(request):
     try:
         data = json.loads(request.body)
-        username = data.get("username")  # Este debe ser tu "nikname"
+        username = data.get("username")
         actual = data.get("contraseniaActual")
         nueva = data.get("nuevaContrasenia")
         confirmar = data.get("confirmarContrasenia")
@@ -223,8 +217,18 @@ def listarRoles(request):
     data = [{"id": rol.id, "nombre": rol.nombre_rol} for rol in roles]
     return JsonResponse({"roles": data})
 
+
+def listarEmpleados(request):
+    empleados = Empleado.objects.annotate(
+        nombre=Concat(F('persona__primerNombre'), Value(' '), F('persona__primerApellido'))
+    ).exclude(idEmpleado__in=Usuario.objects.values('empleado')).values('idEmpleado', 'nombre')
+
+    return JsonResponse({"empleados": list(empleados)})
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
+@rol_requerido("Administrador", "RRHH")
 def modificarUsuario(request):
     try:
         data = json.loads(request.body)
@@ -232,29 +236,16 @@ def modificarUsuario(request):
         nikname = data.get("nikname")
         id_rol = int(data.get("idRol"))
 
-        print("Datos recibidos:", data)
-        print("idUsuario:", id_usuario, "nikname:", nikname, "idRol:", id_rol)
-
         if not all([id_usuario, nikname, id_rol]):
             return JsonResponse({"success": False, "error": "Faltan datos"}, status=400)
 
-        # Validar si el nikname ya está en uso por otro usuario
         if Usuario.objects.exclude(pk=id_usuario).filter(nikname=nikname).exists():
             return JsonResponse({"success": False, "error": "El nombre de usuario ya está en uso"}, status=400)
 
         usuario = Usuario.objects.get(pk=id_usuario)
-
-        # Actualizar el nombre de usuario
         usuario.nikname = nikname
+        usuario.rol_id = id_rol
         usuario.save()
-
-        # Desactivar todos los roles anteriores
-        UsuarioRol.objects.filter(usuario=usuario).update(activo=False)
-
-        # Reactivar o crear nuevo rol
-        usuario_rol, created = UsuarioRol.objects.get_or_create(usuario=usuario, rol_id=id_rol)
-        usuario_rol.activo = True
-        usuario_rol.save()
 
         return JsonResponse({"success": True, "mensaje": "Usuario actualizado correctamente"})
 
@@ -263,23 +254,52 @@ def modificarUsuario(request):
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
 
+
 @csrf_exempt
 @require_http_methods(["GET"])
+@rol_requerido("Administrador", "RRHH")
 def usuariosInactivos(request):
-    usuarios = Usuario.objects.select_related("empleado").filter(activo=False)
+    usuarios = Usuario.objects.select_related("empleado", "rol").filter(activo=False)
     datos = []
     for u in usuarios:
-        rol = UsuarioRol.objects.filter(usuario=u, activo=True).first()
         datos.append({
             "idUsuario": u.id,
             "nikname": u.nikname,
             "empleado": f"{u.empleado.persona.primerNombre} {u.empleado.persona.primerApellido}",
             "activo": u.activo,
             "mail": u.empleado.persona.correo,
-            "rol": rol.rol.nombre_rol if rol else "Sin rol"
+            "rol": u.rol.nombre_rol if u.rol else "Sin rol"
         })
     return JsonResponse({"usuarios": datos}, status=200)
 
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def buscarUsuario(request):
+    try:
+        usuarioEntrada = json.loads(request.body).get('nikname', '').strip()
+
+        if not usuarioEntrada:
+            return JsonResponse({'error': 'Usuario requerido'}, status=400)
+
+        u = Usuario.objects.select_related('empleado__persona', 'rol').filter(nikname__iexact=usuarioEntrada).first()
+
+        if not u:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+
+        return JsonResponse({
+            "idUsuario": u.id,
+            "nikname": u.nikname,
+            "empleado": f"{u.empleado.persona.primerNombre} {u.empleado.persona.primerApellido}",
+            "activo": u.activo,
+            "mail": u.empleado.persona.correo,
+            "rol": u.rol.nombre_rol if u.rol else "Sin rol"
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido'}, status=400)
+
+    
 
 '''
 @csrf_exempt  

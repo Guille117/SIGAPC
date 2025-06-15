@@ -120,6 +120,7 @@ nav{
     margin-left: 25px;
     padding-right: 30px;
 }
+
 .op{
     display: flex;
     margin-bottom: 8px;
@@ -155,15 +156,24 @@ nav{
     cursor: pointer;;
 }
 
+#aqui{
+    background-color: #030;
+    color: white;
+}
+
+#aqui svg path{
+    fill:white
+}
+
+
 #menuNav {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
 
-/* Al activarse, el menú se despliega suavemente */
 #menuNav.activo {
-  max-height: 900px; /* ajusta según el contenido real */
+  max-height: 900px; 
 }
 
 

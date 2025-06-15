@@ -28,6 +28,7 @@
         <span class="usuarioText">Admin</span>
         </div>
     </header>
+
     <main class="principal">
         <nav id="menuNav">
           <a href="{% url 'inicio' %} " style="text-decoration: none; color: inherit;">
@@ -120,13 +121,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
                         <path d="M10.59 18.5H2.5V4.5H0.5V18.5C0.5 19.0304 0.710714 19.5391 1.08579 19.9142C1.46086 20.2893 1.96957 20.5 2.5 20.5H11.31C10.9422 19.8865 10.6977 19.2071 10.59 18.5ZM16.5 0.5H11.5V5.5L9.5 4L7.5 5.5V0.5H6.5C5.96957 0.5 5.46086 0.710714 5.08579 1.08579C4.71071 1.46086 4.5 1.96957 4.5 2.5V14.5C4.5 15.0304 4.71071 15.5391 5.08579 15.9142C5.46086 16.2893 5.96957 16.5 6.5 16.5H10.59C10.7356 15.6376 11.068 14.8175 11.5639 14.0971C12.0598 13.3767 12.7072 12.7734 13.4607 12.3295C14.2142 11.8855 15.0557 11.6117 15.9262 11.5272C16.7967 11.4426 17.6751 11.5494 18.5 11.84V2.5C18.5 1.96957 18.2893 1.46086 17.9142 1.08579C17.5391 0.710714 17.0304 0.5 16.5 0.5ZM17.5 13.5V16.5H20.5V18.5H17.5V21.5H15.5V18.5H12.5V16.5H15.5V13.5H17.5Z" fill="white"/>
                     </svg>
-                    <h3>Agregar empleado</h3>
+                    <h3>Agregar usuario</h3>
                 </div>
                 <div class="opci">
                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
                         <path d="M10.59 18.5H2.5V4.5H0.5V18.5C0.5 19.0304 0.710714 19.5391 1.08579 19.9142C1.46086 20.2893 1.96957 20.5 2.5 20.5H11.31C10.9422 19.8865 10.6977 19.2071 10.59 18.5ZM16.5 0.5H11.5V5.5L9.5 4L7.5 5.5V0.5H6.5C5.96957 0.5 5.46086 0.710714 5.08579 1.08579C4.71071 1.46086 4.5 1.96957 4.5 2.5V14.5C4.5 15.0304 4.71071 15.5391 5.08579 15.9142C5.46086 16.2893 5.96957 16.5 6.5 16.5H10.59C10.7356 15.6376 11.068 14.8175 11.5639 14.0971C12.0598 13.3767 12.7072 12.7734 13.4607 12.3295C14.2142 11.8855 15.0557 11.6117 15.9262 11.5272C16.7967 11.4426 17.6751 11.5494 18.5 11.84V2.5C18.5 1.96957 18.2893 1.46086 17.9142 1.08579C17.5391 0.710714 17.0304 0.5 16.5 0.5ZM17.5 13.5V16.5H20.5V18.5H17.5V21.5H15.5V18.5H12.5V16.5H15.5V13.5H17.5Z" fill="white"/>
                     </svg>
-                    <h3>Agregar usuario</h3>
+                    <h3>Agregar empleado</h3>
                 </div>
                 <div class="opci" id="inactivos">
                     <div id="inac">
@@ -150,7 +151,7 @@
                 </div>
                 <div class="nomUsu">
                     <label for="usu">Buscar Usuarios</label>
-                    <input type="text" placeholder="Usuario">
+                    <input type="text" placeholder="Usuario" id="inputUsuario">
                 </div>
                 <button id="busc">Buscar</button>
             </div>
@@ -206,41 +207,35 @@
   </div>
 </div>
 
-
-
 <div id="modalNuevoUsuario" class="modal">
   <div class="modal-contenido">
     <h2>Crear Usuario</h2>
 
     <label for="nombreEmpleado">Buscar Empleado</label>
-    <input list="empleados" id="nombreEmpleado" placeholder="Ingrese nombre del empleado">
-    <datalist id="empleados">
-      <option value="Juan Pérez" data-id="001">
-      <option value="Ana Gómez" data-id="002">
-      <option value="Luis Martínez" data-id="003">
-    </datalist>
-
+    <select name="nose" id="itemsEmpleado"></select>
     <label for="idEmpleado">ID del Empleado</label>
-    <input type="text" id="idEmpleado" placeholder="ID" readonly>
+    <input type="text" id="idEmpleado" placeholder="ID" readonly required>
 
-    <label for="usuario">Usuario</label>
-    <input type="text" id="usuario" placeholder="Nombre de usuario">
+    <label for="usur">Usuario</label>
+    <input type="text" id="usur" placeholder="Alias" required>
 
-    <label for="contrasenia">Contraseña</label>
-    <input type="password" id="contrasenia" placeholder="Contraseña">
+    <label for="con">Contraseña</label>
+    <input type="password" id="con" placeholder="Contraseña" required>
 
     <label for="rol">Rol</label>
-    <select class="rol">
+    <select class="rol" id="posRoles" required>
     </select>
 
-    <button class="btn-guardar">Guardar</button>
+    <button class="btn-guardar" id="guarda">Guardar</button>
     <span id="cerrarNuevoUsuario" class="cerrar">&times;</span>
   </div>
 </div>
-    
+
+
+
 <script src="{% static 'js/usuario1.js' %}"></script>
-<script src="{% static 'js/mostrarOcultar.js' %}"></script>
-<!--
+
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("btnMenu");
@@ -251,6 +246,6 @@
     });
   });
 </script>
--->
+
 </body>
 </html>
