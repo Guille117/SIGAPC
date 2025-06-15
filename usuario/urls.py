@@ -9,5 +9,9 @@ urlpatterns=[
     path('eliminar/<int:id>/', views.eliminarUsuario, name='eliminarUsuario'),
     path('mostrarPorRol/', views.usuariosRol, name='usuariosRol'),
     path('usuario/', views.usu, name="ususu"),
-    path('methLogin/', views.loginUsuario, name="metodoLogin" )
+    path('methLogin/', views.loginUsuario, name="metodoLogin" ),
+    path('methActivar/', views.cambiarEstado), #
+    path('methContra/', views.cambiarContra),
+    path('methRoles/', views.listarRoles),
+    path('methInactivos/', views.usuariosInactivos),
 ]

@@ -143,8 +143,8 @@
             </div>
             <div class="busqueda">
                 <div class="rolo">
-                    <label for="miSelect">Buscar por roles</label>
-                    <select id="miSelect">
+                    <label for="rol">Buscar por roles</label>
+                    <select class="rol" id="select1">
                         <option disabled selected>Roles</option>
                     </select>
                 </div>
@@ -152,38 +152,25 @@
                     <label for="usu">Buscar Usuarios</label>
                     <input type="text" placeholder="Usuario">
                 </div>
-                <button>Buscar</button>
+                <button id="busc">Buscar</button>
             </div>
             <div class="mostrar">
-                <table class="tablaUsu">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Usuario</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>01</td>
-                                <td>user01</td>
-                                <td>nombre apellido</td>
-                                <td>nombre@gmail.com</td>
-                                <td>Supervisor</td>
-                                <td>
-                                    <button class="btn verde" title="Editar contraseña" id="btnEditar">⋯</button>
-                                    <button class="btn verde" title="Editar usuario" id="btnEditarUsuario"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
-  <path d="M9.83752 2.24552C10.0542 2.02888 10.0542 1.66782 9.83752 1.4623L8.5377 0.162477C8.33218 -0.0541591 7.97112 -0.0541591 7.75448 0.162477L6.7324 1.179L8.81544 3.26205M0 7.91696V10H2.08304L8.22664 3.85085L6.14359 1.76781L0 7.91696Z" fill="#FBFBFB"/>
-</svg></button>
-                                    <button class="btn rojo" title="Desactivar Usuario">🚫</button>
-                                </td>
-                            </tr>
-
-                          </tbody>
-                </table>
+                
+              <table class="tablaUsu" id="tablaUsu">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Las filas se insertarán dinámicamente -->
+                </tbody>
+              </table>
             </div>
         </main>
     </main>
@@ -191,12 +178,12 @@
 <div id="modal" class="modal">
   <div class="modal-contenido">
     <h2>Cambiar Contraseña</h2>
-    <input type="password" placeholder="Contraseña Actual*" required>
-    <input type="password" placeholder="Nueva Contraseña*" required>
-    <input type="password" placeholder="Confirmar Nueva Contraseña*" required>
+    <input id="contraseniaActual" type="password" placeholder="Contraseña Actual*" required >
+    <input id="nuevaContrasenia" type="password" placeholder="Nueva Contraseña*" required >
+    <input id="confirmarContrasenia" type="password" placeholder="Confirmar Nueva Contraseña*" required >
     
-    <button class="btn-guardar">
-      💾 Guardar
+    <button id="btnGuardarContrasenia" data-username="" class="btn-guardar">
+      Guardar
     </button>
     <span id="cerrar" class="cerrar">&times;</span>
   </div>
@@ -206,20 +193,19 @@
   <div class="modal-contenido">
     <h2>Editar Usuario</h2>
 
+    <input type="hidden" id="idEditarUsuario">
+
     <label for="usuario">Usuario</label>
     <input type="text" id="usuario" placeholder="Nombre de usuario" required>
 
-    <label for="rol">Rol</label>
-    <select id="rol">
-      <option value="admin">Administrador</option>
-      <option value="user">Usuario</option>
-      <option value="supervisor">Supervisor</option>
-    </select>
+    <label for="rolEditarUsuario">Rol</label>
+    <select class ="rol" id="rolEditarUsuario"></select>
 
-    <button class="btn-guardar">💾 Guardar Cambios</button>
+    <button class="btn-guardar">Guardar Cambios</button>
     <span id="cerrarUsuario" class="cerrar">&times;</span>
   </div>
 </div>
+
 
 
 <div id="modalNuevoUsuario" class="modal">
@@ -244,19 +230,18 @@
     <input type="password" id="contrasenia" placeholder="Contraseña">
 
     <label for="rol">Rol</label>
-    <select id="rol">
-      <option value="admin">Administrador</option>
-      <option value="user">Usuario</option>
-      <option value="supervisor">Supervisor</option>
+    <select class="rol">
     </select>
 
-    <button class="btn-guardar">💾 Guardar</button>
+    <button class="btn-guardar">Guardar</button>
     <span id="cerrarNuevoUsuario" class="cerrar">&times;</span>
   </div>
 </div>
-
-
-    <script>
+    
+<script src="{% static 'js/usuario1.js' %}"></script>
+<script src="{% static 'js/mostrarOcultar.js' %}"></script>
+<!--
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("btnMenu");
     const nav = document.getElementById("menuNav");
@@ -265,85 +250,7 @@
       nav.classList.toggle("activo");
     });
   });
-
-
-    const btn = document.getElementById("btnEditar");
-  const modal = document.getElementById("modal");
-  const cerrar = document.getElementById("cerrar");
-
-  btn.addEventListener("click", () => {
-    modal.style.display = "flex";
-  });
-
-  cerrar.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-
-  // Cerrar al hacer clic fuera del modal
-  window.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-
-
-    const btnUsuario = document.getElementById("btnEditarUsuario");
-  const modalUsuario = document.getElementById("modalUsuario");
-  const cerrarUsuario = document.getElementById("cerrarUsuario");
-
-  btnUsuario.addEventListener("click", () => {
-    modalUsuario.style.display = "flex";
-  });
-
-  cerrarUsuario.addEventListener("click", () => {
-    modalUsuario.style.display = "none";
-  });
-
-  // Cerrar al hacer clic fuera del modal
-  window.addEventListener("click", (e) => {
-    if (e.target === modalUsuario) {
-      modalUsuario.style.display = "none";
-    }
-  });
-
-
-  const btnNuevoUsuario = document.getElementById("btnNuevoUsuario");
-  const modalNuevoUsuario = document.getElementById("modalNuevoUsuario");
-  const cerrarNuevoUsuario = document.getElementById("cerrarNuevoUsuario");
-
-  const nombreEmpleadoInput = document.getElementById("nombreEmpleado");
-  const idEmpleadoInput = document.getElementById("idEmpleado");
-
-  const empleados = {
-    "Juan Pérez": "001",
-    "Ana Gómez": "002",
-    "Luis Martínez": "003"
-  };
-
-  btnNuevoUsuario.addEventListener("click", () => {
-    modalNuevoUsuario.style.display = "flex";
-  });
-
-  cerrarNuevoUsuario.addEventListener("click", () => {
-    modalNuevoUsuario.style.display = "none";
-  });
-
-  window.addEventListener("click", (e) => {
-    if (e.target === modalNuevoUsuario) {
-      modalNuevoUsuario.style.display = "none";
-    }
-  });
-
-  // Autocompletar el ID del empleado
-  nombreEmpleadoInput.addEventListener("input", () => {
-    const nombre = nombreEmpleadoInput.value;
-    if (empleados[nombre]) {
-      idEmpleadoInput.value = empleados[nombre];
-    } else {
-      idEmpleadoInput.value = "";
-    }
-  });
 </script>
-    
+-->
 </body>
 </html>
