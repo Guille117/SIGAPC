@@ -371,51 +371,6 @@ function cambiarContrasenia() {
   });
 }
 
-function cambiarContrasenia() {
-  const btn = document.getElementById("btnGuardarContrasenia");
-  const username = btn.dataset.username;
-
-  const actual = document.getElementById("contraseniaActual").value.trim();
-  const nueva = document.getElementById("nuevaContrasenia").value.trim();
-  const confirmar = document.getElementById("confirmarContrasenia").value.trim();
-
-  if (!actual || !nueva || !confirmar) {
-    alert("Todos los campos son obligatorios.");
-    return;
-  }
-
-  if (nueva !== confirmar) {
-    alert("La nueva contraseña y su confirmación no coinciden.");
-    return;
-  }
-
-  const datos = {
-    username: username,
-    contraseniaActual: actual,
-    nuevaContrasenia: nueva,
-    confirmarContrasenia: confirmar
-  };
-
-  fetch('/usuario/methContra/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(datos)
-  })
-  .then(res => res.json().then(data => ({ status: res.status, body: data })))
-  .then(({ status, body }) => {
-    if (status === 200 && body.success) {
-      alert("Contraseña actualizada correctamente.");
-      cerrarModalContrasenia();
-    } else {
-      alert("Error: " + (body.error || "Error desconocido."));
-    }
-  })
-  .catch(err => {
-    console.error("Error al cambiar contraseña:", err);
-    alert("Error al conectar con el servidor.");
-  });
-}
-
 function cerrarModalContrasenia() {
   const modal = document.getElementById("modal");
   modal.style.display = "none";
