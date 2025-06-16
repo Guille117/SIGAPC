@@ -1,4 +1,3 @@
-# empleado/management/commands/cargar_datos_realistas.py
 
 from django.core.management.base import BaseCommand
 from empleado.models import Departamento, Persona, Empleado

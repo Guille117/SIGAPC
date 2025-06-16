@@ -8,12 +8,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         try:
-            empleado = Empleado.objects.get(idEmpleado=1)  # Puedes cambiar a otro ID si deseas
+            empleado = Empleado.objects.get(idEmpleado=1)  
         except Empleado.DoesNotExist:
             self.stdout.write(self.style.ERROR("Empleado con ID 1 no existe."))
             return
 
-        rol_admin = Rol.objects.get(id=1)  # Asegúrate de que el rol con id=1 sea el de más permisos
+        rol_admin = Rol.objects.get(id=1)  
 
         usuario, creado = Usuario.objects.get_or_create(
             empleado=empleado,
