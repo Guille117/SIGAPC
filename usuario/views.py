@@ -217,13 +217,15 @@ def listarRoles(request):
     data = [{"id": rol.id, "nombre": rol.nombre_rol} for rol in roles]
     return JsonResponse({"roles": data})
 
-
 def listarEmpleados(request):
     empleados = Empleado.objects.annotate(
         nombre=Concat(F('persona__primerNombre'), Value(' '), F('persona__primerApellido'))
-    ).exclude(idEmpleado__in=Usuario.objects.values('empleado')).values('idEmpleado', 'nombre')
+    ).exclude(idEmpleado__in=Usuario.objects.values_list('empleado_id', flat=True)) \
+     .values('idEmpleado', 'nombre')
 
     return JsonResponse({"empleados": list(empleados)})
+
+
 
 
 @csrf_exempt
